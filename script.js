@@ -1,28 +1,37 @@
-let playerSelection;
-let computerSelection;
-let tieScore;
-let playerScore;
-let computerScore;
-let rockCount;
-let scissorsCount;
-let paperCount;
-playGame();
+let playerScore = 0;
+let computerScore = 0;
+let tieScore = 0;
+let roundCount = 0;
+let roundResult;
+//Rock Button
+const rockBtn = document.querySelector('.buttonRock');
+rockBtn.addEventListener('click', () => {
+    playRound("rock");
+    
+});
+//Paper Button
+const paperBtn = document.querySelector('.buttonPaper');
+paperBtn.addEventListener('click', () => {
+    playRound("paper");
+    
+});
+//Scissors Button
+const scissorsBtn = document.querySelector('.buttonScissors');
+scissorsBtn.addEventListener('click', () => {
+    playRound("scissors");
+    
+});
 
-//RPS
-
-//1. get Computer Choice
+// get Computer Choice
 function getComputerSelection() {
     const randomNumber = Math.floor(Math.random() * 3 + 1);
     if (randomNumber == 1) {
-        rockCount++;
         computerSelection = "rock";
     }
     else if (randomNumber == 2) {
-        paperCount++;
         computerSelection = "paper";
     }
     else if (randomNumber == 3) {
-        scissorsCount++;
         computerSelection = "scissors";
     }
     else {
@@ -31,36 +40,7 @@ function getComputerSelection() {
     return computerSelection;
 }
 
-//2. get Player Choice
-function getPlayerSelection() {    // this function has been altered to randomly make a player selection. original code is commented out.
-
-//    playerSelection = prompt("rock, paper, scissors?").toLowerCase();
-//    if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
-//        return playerSelection;
-//   }
-//    else {
-//        getPlayerSelection();
-//   }
-const randomNumber = Math.floor(Math.random() * 3 + 1);
-    if (randomNumber == 1) {
-        rockCount++;
-        playerSelection = "rock";
-    }
-    else if (randomNumber == 2) {
-        paperCount++;
-        playerSelection = "paper";
-    }
-    else if (randomNumber == 3) {
-        scissorsCount++;
-        playerSelection = "scissors";
-    }
-    else {
-    playerSelection = "ERROR";
-    }
-    return playerSelection;
-}
-
-//3. determine and score winner of round
+//determine and score winner of round
 function calcRoundResult(pS, cS) {
     if (pS === cS) {
         roundResult = `you both chose ${pS}, this round is tie!`;
@@ -74,42 +54,42 @@ function calcRoundResult(pS, cS) {
         roundResult = `${cS} beats ${pS}, computer wins this round!`;
         computerScore++;
     }
+    roundCount++;
     return roundResult;
 }
 
-//4. play round
-function playRound() {
+// play round
+function playRound(playerSelect) {
     getComputerSelection();
-    getPlayerSelection();
-    calcRoundResult(playerSelection, computerSelection);
-    
+    calcRoundResult(playerSelect, computerSelection);
+    wwcd(playerScore, computerScore);    
+    displayInfo(roundCount, playerScore, computerScore, tieScore, roundResult);
 }
 
-//5. play Game (5 rounds) with new user input each Round
-function playGame() {
-    rockCount = 0;
-    scissorsCount = 0;
-    paperCount = 0;
-    tieScore = 0;
-    playerScore = 0;
-    computerScore = 0;
-    const rounds = prompt("How many rounds would you like to play?", "5");
-    for(i = 1; i <= rounds; i++) {
-        playRound();
-        console.log(`Round ${i}: ${roundResult} Score: Player ${playerScore} Computer ${computerScore} Ties ${tieScore}`);
-        console.log(`Rock: ${rockCount} Paper: ${paperCount} Scissors: ${scissorsCount}`);
+//display scores
+function displayInfo(roundC, playerS, computerS, tieS, roundR) {
+    document.getElementById("roundCount").innerHTML = `Round: ${roundC}`;
+    document.getElementById("playerScore").innerHTML = `Player Score: ${playerS}`;
+    document.getElementById("computerScore").innerHTML = `Computer Score: ${computerS}`;
+    document.getElementById("tieScore").innerHTML = `Ties: ${tieS}`;
+    document.getElementById("roundResult").innerHTML = `Round Result: ${roundR}`;
+}
+//winner winner eat some turkey
+function wwcd(playerS, computerS) {
+    if (playerS >= 5) {
+        roundResult = `CONGRATULATIONS YOU'RE A WINNER.. for once.`;
+        playAgain();        
     }
-    playerScore > computerScore ? (result = "Player Wins the Game!") : playerScore == computerScore ? (result = "Tie Game!") : (result = "Computer Wins the Game!");
-    console.log(`${result}`);
-    playAgain();
-    
+    else if (computerS >= 5) {
+        roundResult = `YOU LOSE.. again.`;  
+        playAgain();      
+    }
 }
-
-//6. play again? 
 function playAgain() {
-   if (confirm("play again?") == true) {
-    playGame();
-   }
-   else
-   return;   
+    document.getElementById("playAgain").innerHTML = `<button class="playAgainBtn">PLAY AGAIN</button>`;
+        const playAgainBtn = document.querySelector('.playAgainBtn');
+        playAgainBtn.addEventListener('click', () => {
+            location.reload();
+         });
+    
 }
